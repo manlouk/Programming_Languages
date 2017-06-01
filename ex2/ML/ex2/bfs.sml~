@@ -1,0 +1,107 @@
+fun convertToString(arr)=
+        let fun conv(arr,n,L)= if n = Array.length(arr) then implode(rev(L)) else
+                conv(arr,n+1,Array.sub(arr,n)::L)
+         in
+                conv(arr,0,[])
+          end 
+
+
+
+val q=Queue.mkQueue(): (string * string) Queue.queue
+		  
+fun roll(a,0) =convertToString(a)
+    | roll(a,1)=
+         
+          
+                (let
+                    val tmp1 = Array.sub(a,0)
+                    val tmp2 = Array.sub(a,3)       
+                    val tmp3 = Array.sub(a,5)
+                in
+                     Array.update(a,0,Array.sub(a,2)); 
+                     Array.update(a,3,tmp1);
+                     Array.update(a,5,tmp2);
+                     Array.update(a,2,tmp3)
+                 end ;
+                
+                        roll(a,0))
+                        
+          | roll(a,2)=( 
+                       let 
+                           val tmp1 = Array.sub(a,1)
+                           val tmp2 = Array.sub(a,4)       
+                           val tmp3 = Array.sub(a,6)
+                       in 
+                           Array.update(a,1,Array.sub(a,3));
+                           Array.update(a,4,tmp1);
+                           Array.update(a,6,tmp2);
+                           Array.update(a,3,tmp3)
+                        end;roll(a,0))                   
+          | roll(a,3)=( 
+                        let 
+                           val tmp1 = Array.sub(a,5)
+                           val tmp2 = Array.sub(a,8)       
+                           val tmp3 = Array.sub(a,10)
+                        in
+                           Array.update(a,5,Array.sub(a,7));
+                           Array.update(a,8,tmp1);
+                           Array.update(a,10,tmp2);
+                           Array.update(a,7,tmp3)
+                        end;roll(a,0))                   
+          | roll(a,_) =(         
+                        let 
+                           val tmp1 = Array.sub(a,6)
+                           val tmp2 = Array.sub(a,9)       
+                           val tmp3 = Array.sub(a,11)
+                        in
+                           Array.update(a,6,Array.sub(a,8));
+                           Array.update(a,9,tmp1);
+                           Array.update(a,11,tmp2);
+                           Array.update(a,8,tmp3)
+                        end;roll(a,0)) 
+fun char_to_int(chr)=
+        case chr of 
+                  #"G" => 0
+                | #"g" => 1
+                | #"b" => 2
+                | #"r" => 3
+                | _ => 4
+
+fun rollstring(str,i)=
+		roll(Array.fromList(explode str ),i)	  
+
+fun init(q,s)=(Queue.enqueue(q,(s,"")))
+
+val hashFunction = HashString.hashString;
+
+val myHashTable : (string, string) HashTable.hash_table = 
+         HashTable.mkTable (hashFunction, op=) (1, Fail "NOT_FOUND");  
+
+fun add_elem(el:(string * string ),i,())= if i=5 then ()
+	else
+	     let 
+			val ch_i=rollstring((#1 el),i)
+			val k = (ch_i,(#2 el)^Int.toString(i))
+
+		 in 
+			if HashTable.find myHashTable ch_i  = NONE then add_elem(el,i+1,(Queue.enqueue(q,k);HashTable.insert myHashTable((ch_i,ch_i))))
+														else add_elem(el,i+1,())
+		end
+
+  fun bfs(node,())=
+        
+                     if String.compare((#1 node),"bgbGgGGrGyry")=EQUAL then node else bfs(Queue.dequeue(q),add_elem(node,1,()));
+                    
+                  		
+fun diapragmateysi(args)=
+        let 
+               (* val args=hd(CommandLine.arguments()) *)
+                val _ = init(q, args)
+                val h = Queue.head(q)
+                val _ = HashTable.insert myHashTable (( #1 h),(#1 h))  
+                val sol=bfs(Queue.head(q),())
+         in
+                print( ( #2 sol)^"\n")
+         end    
+(* val _ = OS.Process.exit(OS.Process.success)        
+ *)

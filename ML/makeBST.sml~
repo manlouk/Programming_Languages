@@ -1,0 +1,12 @@
+datatype 'a tree = Empty 
+                  | Node of ('a tree ) * 'a * ( 'a tree )
+
+fun makeBST(L,f)=
+        let fun makeTree([],f,T)=T
+                | makeTree(x::xs,f,Empty)=makeTree(xs,f,Node(Empty,x,Empty))
+                | makeTree(x::xs,f,Node(Empty,data,Empty))=if f(x,data) = true then makeTree(xs,f,Node(Node(Empty,x,Empty),data,Empty)) else makeTree(xs,f,Node(Node(Empty,x,Empty)))
+                | makeTree(x::xs,f,Node(L,data,R))= if f(x,data)=true then makeTree(x::xs,f,L) else makeTree(x::xs,f,R)
+         in 
+                makeTree(L,f,Empty)
+          end
+                        

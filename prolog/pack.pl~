@@ -1,0 +1,3 @@
+tr([],[],[]).
+tr([X|Xs],[X,Y|Ys],Xs):-X == Y,tr(Xs,Ys,Xs).
+tr(L,_,L). 

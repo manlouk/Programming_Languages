@@ -1,0 +1,55 @@
+#include<cstdio>
+#include<cstdlib>
+#include<cmath>
+#include<iostream>
+#include<fstream>
+using namespace std;
+
+long long sum_digit_squares(long long a){
+    long long s=0;
+    while(a>0){
+       s=s+(a%10)*(a%10);
+       a=a/10;
+    }
+  //  s+=a*a;
+    return s;
+}
+
+
+bool ishappy(long long a){
+    long long a1,a2;
+    //bool flag=true;
+    a1=a;a2=a;
+    while(true){
+        a1=sum_digit_squares(a1);
+       // cout<<a1<<"\n";
+        if(a1==1){
+            return true;}
+
+            a2=sum_digit_squares(a2);
+            a2=sum_digit_squares(a2);
+           // cout<<a2<<"\n";
+            if(a2==1) return true;
+            else{
+              if(a2==a1) {return false;}
+            }
+    }
+}
+
+
+ifstream fin;
+int main(int argc,char* argv[]){
+    long long A,B;
+    //fin.open(argv[1]);
+    cin>>A>>B;
+    long long happies=0;
+    for(long long i=A;i<=B;i++){
+        cout<<i<<"\n";
+      if(ishappy(i)==true)happies++;
+      //cout<<happies<<"\n";
+    //   long long a=sum_digit_squares(i);
+      // cout<<a<<"\n";
+    }
+    cout<<happies<<"\n";
+}
+

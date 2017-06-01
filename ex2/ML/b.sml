@@ -1,0 +1,103 @@
+signature EQ = sig
+  (* t is a type with a notion of equality *)
+  type t
+  val equal: t * t -> bool
+end
+structure IntEq : EQ = struct
+(* subtlety: must use : here, not :>, so that t is visible
+   outside the structure *)
+  type t = int
+  fun equal(x:int,y:int) = x = y
+end
+
+signature SET = sig
+  (* Overview: a set is a set of distinct items of type elem.
+   * For example, if elem is int, then a set might be
+   * {1,-11,0}, {}, or {1001} *)
+  type elem
+  type set
+  
+  (* test for equality of two elements *)
+  val eq: elem * elem -> bool
+  (* empty is the empty set *)
+  val empty : set
+  (* Effects: add(s,e) is s union {e} *)
+  val add: set * elem -> set
+  (* remove(s,x) is s - {x}  (set difference) *)
+  val remove: set * elem -> set
+  (* member(s,x) is whether x is a member of s *)
+  val member: set * elem -> bool
+  (* size(s) is the number of elements in s *)
+  val size: set -> int
+  (* fold over the elements of the set *)
+  val fold: ((elem*'b)->'b) -> 'b -> set -> 'b
+  (* fromList(lst) is the set of elements in lst.
+   * Requires: lst contains no equal elements *)
+  val fromList: elem list -> set
+  val toList: set -> elem list
+end
+signature HASHABLE = sig
+  type t
+  (* hash is a function that maps a t to an integer. For
+   * all e1, e2, if equal(e1,e2), then hash(e1) = hash(e2) *)
+  val hash: t->int
+  (* equal is an equivalence relation on t. *)
+  val equal: t*t->bool
+end
+
+
+functor HashSet(structure Hash: HASHABLE and
+                Set: SET where type elem = Hash.t)
+= struct
+  type elem = Hash.t
+  type bucket = Set.set
+  type set = {arr: bucket array, nelem: int ref}
+  (* AF: the set represented by a "set" is the union of
+   * all of the bucket sets in the array "arr".
+   * RI: nelem is the total number of elements in all the buckets in
+   * arr. In each bucket, every element e hashes via Hash.hash(e)
+   * to the index of that bucket modulo length(arr). *)
+
+  (* Find the appropriate bucket for e *)
+  fun findBucket({arr, nelem}, e) (f:bucket array*int*bucket*elem*int ref->'a) =
+    let
+      val i = Hash.hash(e) mod Array.length(arr)
+      val b = Array.sub(arr, i)
+    in
+      f(arr, i, b, e, nelem)
+    end
+  fun member(s, e) =
+    findBucket(s, e)
+        (fn(_, _, b, e, _) => Set.member(b, e))
+  fun add(s, e) =
+    findBucket(s, e)
+      (fn(arr, i, b, e, nelem) =>
+        ( Array.update(arr, i, Set.add(b, e));
+          nelem := !nelem + 1 ))
+  fun remove(s, e) =
+    findBucket(s, e)
+      (fn(arr, i, b, e, nelem) =>
+	( case Set.remove(b,e) of
+	    (b2, NONE) => NONE
+	  | (b2, SOME y) =>
+	      ( Array.update(arr, i, b2);
+		nelem := !nelem - 1;
+		SOME y )))
+  fun size({arr, nelem}) = !nelem
+  fun fold f init {arr, nelem} =
+    Array.foldl (fn (b, curr) => Set.fold f curr b) init arr
+  fun create(size: int): set =
+    { arr = Array.array(size, Set.empty), nelem = ref 0 }
+  (* Copy all elements from s2 into s1. *)
+  fun copy(s1:set, s2:set): unit =
+    fold (fn(elem,_)=> add(s1,elem)) () s2
+  fun fromList(lst) = let
+      val s = create(length lst)
+    in
+      List.foldl (fn(e, ()) => add(s,e)) () lst;
+      s
+    end
+  fun toList({arr, nelem}) =
+    Array.foldl (fn (b, lst) => Set.fold (fn(e, lst) => e::lst) lst b)
+        [] arr
+end

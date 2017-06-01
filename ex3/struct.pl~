@@ -1,0 +1,2 @@
+turn_into_struct(List, Struct) :-
+    Struct =.. [structure|List].

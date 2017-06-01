@@ -1,0 +1,226 @@
+open Array
+open Queue
+open HashTable
+fun convertToString(arr)=
+        let fun conv(arr,n,L)= if n = Array.length(arr) then implode(rev(L)) else
+                conv(arr,n+1,sub(arr,n)::L)
+         in
+                conv(arr,0,[])
+          end 
+
+
+
+val q_r=mkQueue(): (string * string) queue
+val q_l=mkQueue(): (string * string) queue		  
+fun roll_right(a,~1) =convertToString(a)
+    | roll_right(a,0)=roll_right(a,~1)
+    | roll_right(a,1)=
+         
+          
+                (let
+                    val tmp1 = sub(a,0)
+                    val tmp2 = sub(a,3)       
+                    val tmp3 = sub(a,5)
+                in
+                     update(a,0,sub(a,2)); 
+                     update(a,3,tmp1);
+                     update(a,5,tmp2);
+                     update(a,2,tmp3)
+                 end ;
+                
+                        roll_right(a,~1))
+                        
+          | roll_right(a,2)=( 
+                       let 
+                           val tmp1 = sub(a,1)
+                           val tmp2 = sub(a,4)       
+                           val tmp3 = sub(a,6)
+                       in 
+                           update(a,1,sub(a,3));
+                           update(a,4,tmp1);
+                           update(a,6,tmp2);
+                           update(a,3,tmp3)
+                        end;roll_right(a,~1))                   
+          | roll_right(a,3)=( 
+                        let 
+                           val tmp1 = sub(a,5)
+                           val tmp2 = sub(a,8)       
+                           val tmp3 = sub(a,10)
+                        in
+                           update(a,5,sub(a,7));
+                           update(a,8,tmp1);
+                           update(a,10,tmp2);
+                           update(a,7,tmp3)
+                        end;roll_right(a,~1))                   
+          | roll_right(a,_) =(         
+                        let 
+                           val tmp1 = sub(a,6)
+                           val tmp2 = sub(a,9)       
+                           val tmp3 = sub(a,11)
+                        in
+                           update(a,6,sub(a,8));
+                           update(a,9,tmp1);
+                           update(a,11,tmp2);
+                           update(a,8,tmp3)
+                        end;roll_right(a,~1))
+						
+fun roll_left(a,~1) =convertToString(a)
+    | roll_left(a,0)=roll_left(a,~1)
+    | roll_left(a,1)=
+         
+          
+                (let
+                    val tmp1 = sub(a,0)
+                    val tmp2 = sub(a,3)       
+                    val tmp3 = sub(a,5)
+                in
+                     update(a,0,sub(a,3)); 
+                     update(a,3,tmp3);
+                     update(a,5,sub(a,2));
+                     update(a,2,tmp1)
+                 end ;
+                
+                        roll_left(a,~1))
+                        
+          | roll_left(a,2)=( 
+                       let 
+                           val tmp1 = sub(a,1)
+                           val tmp2 = sub(a,4)       
+                           val tmp3 = sub(a,6)
+                       in 
+                           update(a,1,sub(a,4));
+                           update(a,4,tmp3);
+                           update(a,6,sub(a,3));
+                           update(a,3,tmp1)
+                        end;roll_left(a,~1))                   
+          | roll_left(a,3)=( 
+                        let 
+                           val tmp1 = sub(a,5)
+                           val tmp2 = sub(a,8)       
+                           val tmp3 = sub(a,10)
+                        in
+                           update(a,5,sub(a,8));
+                           update(a,8,tmp3);
+                           update(a,10,sub(a,7));
+                           update(a,7,tmp1)
+                        end;roll_left(a,~1))                   
+          | roll_left(a,_) =(         
+                        let 
+                           val tmp1 = sub(a,6)
+                           val tmp2 = sub(a,9)       
+                           val tmp3 = sub(a,11)
+                        in
+                           update(a,6,sub(a,9));
+                           update(a,9,tmp3);
+                           update(a,11,sub(a,8));
+                           update(a,8,tmp1)
+                        end;roll_left(a,~1))
+fun char_to_int(chr)=
+        case chr of 
+                  #"G" => 0
+                | #"g" => 1
+                | #"b" => 2
+                | #"r" => 3
+                | _ => 4
+
+fun rollstring_right(str,i)=
+		roll_right(fromList(explode str ),i)	  
+fun rollstring_left(str,i)=
+		roll_left(fromList(explode str ),i)
+		
+fun init_right(q_r,s)=(enqueue(q_r,(s,"")))
+fun init_left(q_l)= (enqueue(q_l,("bgbGgGGrGyry","")))
+val hashFunction = HashString.hashString;
+
+val myHashR : (string, string) HashTable.hash_table = 
+         HashTable.mkTable (hashFunction, op=) (1, Fail "NOT_FOUND");  
+val myHashL : (string, string) HashTable.hash_table = 
+         HashTable.mkTable (hashFunction, op=) (1, Fail "NOT_FOUND"); 
+fun add_elem_right(el:(string * string ),n_node:(string * string),5,right_root,_)= (n_node,false)
+	| add_elem_right(el,n_node,_,right_root,true)=(n_node,true)
+	|add_elem_right(el,n_node,i,right_root,s)=
+	     let 
+			val ch_i=rollstring_right((#1 el),i)
+			val k = (#2 el)^Int.toString(i)
+		
+			
+		 in 
+		      if HashTable.find myHashL (#1 el) <> NONE then add_elem_right(el,el,0,right_root,true) else
+			if HashTable.find myHashR ch_i  = NONE then
+				if HashTable.find myHashL ch_i <> NONE andalso size  (HashTable.lookup myHashL ch_i) =size (#2 el) then ((HashTable.insert myHashR(ch_i,(#1 el)));add_elem_right(el,(ch_i,k),i+1,right_root,true)) else 
+				(Queue.enqueue(q_r,(ch_i,k));(HashTable.insert myHashR((ch_i,(#1 el))));add_elem_right(el,el,i+1,right_root,false))
+			else add_elem_right(el,el,i+1,right_root,false)
+		end
+		
+fun add_elem_left(el:(string * string ),n_node:(string * string ),5,left_root,false)= (n_node,false)
+	| add_elem_left(el,n_node,_,left_root,true)=(n_node,true)
+	|add_elem_left(el,n_node,i,left_root,s)=
+	     let 
+			val ch_i=rollstring_left((#1 el),i)
+			val k = (#2 el)^Int.toString(i)
+			
+			
+		 in 
+		      if HashTable.find myHashR (#1 el) <> NONE then add_elem_left(el,el,0,left_root,true) else
+			if HashTable.find myHashL ch_i  = NONE then
+				if (HashTable.find myHashR ch_i <>NONE andalso size (HashTable.lookup myHashR ch_i) =size (#2 el))  then ((HashTable.insert myHashL(ch_i,(#1 el)));add_elem_left(el,(ch_i,k),i+1,left_root,true)) else 
+				(Queue.enqueue(q_l,(ch_i,k));(HashTable.insert myHashL((ch_i,(#1 el))));add_elem_left(el,el,i+1,left_root,false))
+			else add_elem_left(el,el,i+1,left_root,false)
+		end
+		
+ fun find_right_path(sol_r,m,right_root)=if sol_r=right_root then m else 
+
+		let 
+			val parent=sol_r
+             
+		in 
+			let fun find_m(m,x,5)= m
+				| find_m(m,x,i)=if x=rollstring_left(parent,i) then Int.toString(i)^m else
+				 find_m(m,x,i+1)
+			val x= HashTable.lookup myHashR sol_r	 
+			in 
+				find_right_path(x,find_m(m,x,1),right_root)
+			end
+		end	
+	 fun find_left_path(sol_l,m,left_root)=if sol_l=left_root then m else
+	
+		let 
+			val parent=sol_l
+            
+		in 
+			let fun find_m(m,y,5)= m
+				| find_m(m,y,i)=if y = rollstring_right(parent,i) then m^Int.toString(i) else 
+				find_m(m,y,i+1)
+			 val y=HashTable.lookup myHashL sol_l 	
+			in 
+				find_left_path(y,find_m(m,y,1),left_root)
+			end				
+		end
+  
+    fun bfs((node_left_updated,true),(node_right_updated,false),right_root,left_root)=find_right_path((#1 node_left_updated),(#2 node_left_updated),right_root)
+  | bfs((node_left_updated,false),(node_right_updated,true),right_root,left_root)=find_left_path((#1 node_right_updated),(#2 node_right_updated),left_root)
+  | bfs((x,s1),(y,s2),right_root,left_root)=
+	let 
+		val h_r=dequeue(q_r)
+		val h_l=dequeue(q_l)
+	in 
+		bfs(add_elem_left(h_l,h_l,0,left_root,s2),add_elem_right(h_r,h_r,0,right_root,s1),right_root,left_root)
+	end	
+                		
+fun main(args)=
+        let 
+            
+                val _ = init_left(q_l)
+				val _ = init_right(q_r, args)
+                val h_r = head(q_r)
+				val h_l=head(q_l)
+                val _ = HashTable.insert myHashR ("",(#1 h_r))  
+				val _= HashTable.insert myHashL ("",(#1 h_l))
+         in				
+                 bfs((h_r,false),(h_l,false),args,"bgbGgGGrGyry")
+        
+         end    
+ 
+		
+	
+	

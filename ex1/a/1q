@@ -1,0 +1,105 @@
+#include<cstdio>
+#include<cstdlib>
+#include<iostream>
+using namespace std;
+
+int dp[10][730];
+bool h[730];
+int sum_digit_squares(int a){
+        int s=0;
+       // clock_t t=clock();
+
+        for(int k=a;k!=0;k/=10){
+            int m=k%10;
+       //   if(a%10==0){a/=10;continue;}
+          s=s+m*m;
+         // if(h[s]==1)break;
+
+         }
+        //t=clock()-t;
+        //cout<<((float)t)/CLOCKS_PER_SEC<<"\n";
+              //  s+=a*a;
+        return s;
+}
+bool ishappy(int a){
+     int a1,a2;
+            //bool flag=true;
+     a1=a;a2=a;
+     while(true){
+      a1=sum_digit_squares(a1);
+                                   // cout<<a1<<"\n";
+      if(a1==1){
+        return true;}
+
+      a2=sum_digit_squares(a2);
+      a2=sum_digit_squares(a2);
+                                                                       // cout<<a2<<"\n";
+      if(a2==1)
+          return true;
+      else{
+         if(a2==a1)
+            {return
+                false;}
+        }
+     }
+
+}
+int numDigits(long long int num) {
+  int count = 1;
+  while (num >= 10) {
+    num /= 10;
+    count++;
+  }
+  return count;
+}
+
+long numSums(long num,long count){
+    if(num<10){
+        for(int j=1;j<=9*9;j++){
+            if(ishappy(j)){
+            count+=dp[1][j];}}
+            return count;}
+    int numD=numDigits(num);
+    long acc=1;
+    for(int i=0;i<numD-1;i++)acc*=10;
+    int MSB=(int)(num/acc);
+    for(int j=0;j<=(numD-1)*9*9;j++){
+        for(int i=1;i<=MSB;i++){
+
+        if(ishappy(j+i*i)){
+            cout<<j+i*i<<" is happy\n";
+            cout<<"dp["<<numD-1<<"]"<<"["<<j+i*i<<"]"<<"="<<dp[numD-1][j+i*i]<<"\n";
+        count+=dp[numD-1][j+i*i];}}}
+     //   cout<<count<<"\n";}
+    numSums(num%(MSB*acc),count);
+//   return count;
+}
+
+
+int main(){
+    long H,L;
+    cin>>L>>H;
+    for(int i=1;i<730;i++)h[i]=false;
+    for(int i=1;i<730;i++)
+        if(ishappy(i))h[i]=true;
+    for(int i=1;i<10;i++){
+        for(int j=0;j<=i*9*9;j++){
+            dp[i][j]=0;}}
+
+    for(int j=0;j<=9;j++)dp[1][j*j]=1;
+    for(int i=1;i<10;i++){
+        for(int j=0;j<=i*9*9;j++){
+            for(int off=0;off<10;off++){
+                dp[i][j+off*off]+=dp[i-1][j];}}}
+/*for(int i=1;i<10;i++){
+        for(int j=0;j<=i*9*9;j++){
+        cout<<"dp["<<i<<"]"<<"["<<j<<"]"<<"="<<dp[i][j]<<"\n";}}
+  */
+           long countH;int i;int j;
+           long countL;
+           countH=numSums(H,0)+1;
+           countL=numSums(L-1,0);
+          cout<<countH-countL<<"\n";
+          }
+
+

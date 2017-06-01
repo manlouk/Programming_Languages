@@ -1,0 +1,8 @@
+fun member(L,a)=  
+       case L of 
+           x::xs => if x = a then true else member(xs,a)
+           nil => false
+           
+             
+    
+        

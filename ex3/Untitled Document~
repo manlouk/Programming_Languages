@@ -1,0 +1,61 @@
+#include<cstdio>
+#include<cstdlib>
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+int sol[11][11][5][5];
+
+int op(int a,int b,int i){
+	double res;
+         if(i==1)
+	     res=a+b;
+	else if(i==2)
+	     res=a-b;
+	else if(i==3)
+	     res=a*b;
+	else 
+             res=double(a)/b;
+     return res;
+}
+
+	
+
+
+string number;
+bool flag;
+int main(){
+	cin>>number;
+	for(int j=0;j<number.size();j++){
+	  for(int i=0;i<=j;i++){
+		for(int l=0;l<5;l++){
+			if(i==j)
+				sol[i][j][l][k]=stoi(number[i]);
+			else 
+				sol[i][j][0][l]=stoi(number.substr(i,j))
+		}
+	   }
+        }
+	for(int j=1;j<number.size();j++){
+		for(int i=j;i>=0;i--){
+		   for(int current_op=0;current_op<5;current_op++){
+			for(int previous_op=0;prev_op<5;prev_op++){
+				if(current_op==0) 
+					sol[i][j][current_op][previous_op]=stoi(number.substr(i,j));
+				else
+					sol[i][j][current_op][previous_op]=op(stoi(number[i],sol[i+1][j][current_op][previous_op],current_op);
+			}
+	           }
+                }
+       }
+    for(int j=1;j<number.size();j++){
+		for(int i=j;i>=0;i--){
+			for(int current_op=0;current_op<5;current_op++){
+				for(int prev_op=0;prev_op<5;prev_op++){
+					cout<<"i="<<i<<"j="<<j<<"current_op="<<current_op<<"prev_op"<<prev_op<<sol[i][j][current_op][prev_op]<<"\n";
+}
+}
+}
+}
+}
+								

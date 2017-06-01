@@ -1,0 +1,1 @@
+fun append xs ys = foldr(fn(y,z)=>y::z) xs ys

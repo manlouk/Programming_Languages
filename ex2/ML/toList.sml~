@@ -1,0 +1,14 @@
+fun len(L)=
+        let fun len'([],acc)=acc
+                | len'(x::xs,acc)=len'(xs,acc+1)
+         in
+                len'(L,0)
+         end              
+
+fun arraytoList(arr)=
+        let fun toList'(arr,n,L)= 
+            if len(L)=length(arr) then L else
+                toList'(arr,n+1,sub(arr,n)::L)
+         in
+                toList'(arr,0,[])
+         end 

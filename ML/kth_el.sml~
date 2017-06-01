@@ -1,0 +1,6 @@
+fun kth_element(l,k) = let 
+                fun kth_in(x::xs,k,1) = x
+                   |kth_in(x::xs,acc,k)=kth_in(xs,acc+1,k-1)
+        in      
+                kth_in(l,0,k)
+end                                

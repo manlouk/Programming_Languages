@@ -1,0 +1,3 @@
+subset([],[],_).
+subset([X|Xs],[X|Ys],N):-N1 is N-1,length(Xs,N1),subset(Xs,Ys,N1).
+subset(Xs,[_|Ys],N):-subset(Xs,Ys,N).

@@ -1,0 +1,95 @@
+open Array
+
+ val A = array(1002,false)
+ datatype for = to of int * int
+             | downto of int * int
+
+infix to downto
+
+val for =
+    fn lo to up =>
+       (fn f => let fun loop lo = if lo > up then ()
+                                  else (f lo; loop (lo+1))
+                in loop lo end)
+     | up downto lo =>
+       (fn f => let fun loop up = if up < lo then ()
+                                  else (f up; loop (up-1))
+                in loop up end)
+                
+fun digits(x:int):int list=
+  let
+    fun digitIn(x:int,acc:int list):int list=
+      (case x of
+            0 =>acc
+          | x =>digitIn(x div 10,(x mod 10)::acc))
+  in
+    digitIn(x,nil)
+end
+fun simpleMap(F,nil)=nil
+  | simpleMap(F,x::xs)=F(x)::simpleMap(F,xs)
+fun sum_digits(nil)=0
+  | sum_digits(x::xs)=x+sum_digits(xs)
+fun comp(F,G,x)=F(G(x));
+fun f(x)=sum_digits(simpleMap(fn x=>x*x,digits(x)));
+fun isHappy(x:int)=
+  let
+    fun isHappy1(1,_)=true
+      | isHappy1(_,1)=true
+      | isHappy1(x,y)=if x=y then false else
+       isHappy1(f(x),comp(f,f,y))
+  in
+    isHappy1(x,comp(f,f,x))
+  end
+
+fun init(A,1002,_)=()
+        | init(A,i,_) = init(A,i+1,update(A,i,isHappy(i)))
+
+val s = ref 0 
+fun sol()=
+        print(Int.toString(!s))     
+fun iter(A,0,b) = sol()
+   | iter(A,a,b)=
+
+           for ( 0 to 9) 
+            (fn i => for (0 to 9 ) 
+                (fn j =>  for ( 0 to 9 ) 
+                      (fn k =>  for ( 0 to 9 )
+                        (fn l =>  for ( 0 to 9 )
+                                (fn m =>  for ( 0 to 9 )
+                                         (fn n =>  for ( 0 to 9 )
+                                                (fn p =>  for ( 0 to 9 )
+                                                        (fn q =>  for ( 0 to 9 )
+                                                                         (fn r => if r+q*10+p*100 + n*1000 + m*10000 + l*100000 + k*1000000+j*10000000+100000000*i < a then  ()
+                                                                         else 
+                                                                                if r+q*10+p*100 + n*1000 + m*10000 + l*100000 + k*1000000+j*10000000+100000000*i > b then iter(A,0,b) else                       print(Int.toString(i)^Int.toString(j)^Int.toString(k)^Int.toString(l)^Int.toString(m)^Int.toString(n)^Int.toString(p)^Int.toString(q)^Int.toString(r)^"\n")
+                                                                                 
+                                                                                 (*if sub(A,i*i+j*j+k*k+l*l+m*m+r*r+n*n+p*p+q*q) = true then s := !s + 1 else () *)
+                                                                                 
+                                                                                 
+                                                                                ))))))  )) ) 
+
+
+fun main()=
+   
+   let
+        val t= (CommandLine.arguments())
+        val a=hd(t)
+        val b=hd(tl(t)) 
+        val _ = init(A,0,update(A,0,isHappy(0)))
+        val _ = iter(A,Option.valOf (Int.fromString a),Option.valOf (Int.fromString
+        b))
+      
+     (*   val sol=re(Option.valOf (Int.fromString a), Option.valOf (Int.fromString
+        b))
+        *)
+    (*  val d=digits(Option.valOf (Int.fromString a))
+      val result=sum_digits(simpleMap(fn x=>x*x,d))
+      val h=isHappy(result)
+      *)
+    in
+     (* print(Int.toString(!s)^"\n") *)
+      sol()
+   end
+val _ = main()
+        
+        

@@ -1,0 +1,22 @@
+fun main()=
+
+    let
+      val x = ref 0
+      val y= ref 0
+      val z= ref 0
+ in
+
+   while !x<10 do(
+     let val y = ref 0
+     in
+        while !y<10 do(
+        let val z = ref 0
+        in
+            while(!z)<10 do(
+               print(Int.toString(!x)^Int.toString(!y)^Int.toString(!z)^"\n");
+               z := !z+1);
+        end);
+        y := !y+1;
+     end
+     x := !x+1)
+    end

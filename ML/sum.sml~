@@ -1,0 +1,4 @@
+open List
+
+fun sumList(L)=
+     List.foldr (fn (x,y) => y-x) 0 L  

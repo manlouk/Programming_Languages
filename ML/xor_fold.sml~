@@ -1,0 +1,5 @@
+fun xor_fold(L)=foldr(fn (a,b)=> if a = true then b+1 else b) 0 L 
+           
+             
+    
+        

@@ -1,0 +1,145 @@
+import java.util.*;
+import java.io.*;
+public class b {
+ public static class Situation{
+          private  String s;
+          private  String move;
+        public Situation(String s,String move){
+                this.s= new String(s);
+                this.move=new String(move);
+                }
+       }
+  public static void Roll_right(char[] str,int i){
+        char tmp1,tmp2,tmp3;
+        if(i==1){
+                tmp1=str[0];
+                tmp2=str[3];
+                str[0]=str[2];
+                str[3]=tmp1;
+                tmp3=str[5];
+                str[5]=tmp2;
+                str[2]=tmp3;
+              }
+          else if (i==2){
+                tmp1=str[1];
+                tmp2=str[4];
+                tmp3=str[6];
+                str[1]=str[3];
+                str[4]=tmp1;
+                str[6]=tmp2;
+                str[3]=tmp3;
+                }
+           else if(i==3){
+                tmp1=str[5];
+                tmp2=str[8];
+                tmp3=str[10];
+                str[5]=str[7];
+                str[8]=tmp1;
+                str[10]=tmp2;
+                str[7]=tmp3; 
+              }
+           else{
+                tmp1=str[6];
+                tmp2=str[9];
+                tmp3=str[11];
+                str[6]=str[8];
+                str[9]=tmp1;
+                str[11]=tmp2;
+                str[8]=tmp3; 
+              }
+          }                   
+  public static void Roll_left (char[] str,int i){
+        char tmp1,tmp2,tmp3;
+        if(i==1){
+                tmp1=str[0];
+                tmp2=str[3];
+                tmp3=str[5];
+                str[0]=str[3];
+                str[3]=str[5];
+                str[5]=str[2]
+                str[2]=tmp1;
+              }
+          else if (i==2){
+                tmp1=str[1];
+                tmp2=str[4];
+                tmp3=str[6];
+                str[1]=str[4];
+                str[4]=str[6];
+                str[6]=str[3];
+                str[3]=tmp1;
+                }
+           else if(i==3){
+                tmp1=str[5];
+                tmp2=str[8];
+                tmp3=str[10];
+                str[5]=str[8];
+                str[8]=str[10];
+                str[10]=str[7];
+                str[7]=tmp1; 
+              }
+           else{
+                tmp1=str[6];
+                tmp2=str[9];
+                tmp3=str[11];
+                str[6]=str[9];
+                str[9]=str[11];
+                str[11]=str[8];
+                str[8]=tmp1; 
+              }
+         }     
+  private static HashMap <String,String> visited_left = new HashSet <String,String>();
+  private static HashMap <String,String> visited_right = new HashMap <String,String> ();
+   private static Queue<Situation> q_left = new LinkedList<Situation>();
+   private static  Queue<Situation> q_right = new LinkedList<Situation>();
+   public static void main(String[] args) throws Exception {
+        Scanner in=new Scanner(args[0]);
+        String root_left=new String("bgbGgGGrGyry");
+        String root_right new String(in.nextLine());
+        String end_left=root_right;
+        String end_right=root_left;
+        Situation start_left=new Situation(root_left,"");
+        Situation start_right = new Situation(root_right,"");
+        q_left.offer(start_left);q_right(start_right);visited_left.add(start_left);visited_right.add(start_right);
+        while ((!q_left.isEmpty())||(!q_right.isEmpty())){
+                    Situation u1=q_left.poll();
+                    Situation u2=q_right.poll();
+                        if((u1.s).equals(end_left)){
+                              sol=u1.move;
+                              break;}
+                        else if((u2.s).equals(end_right)){
+                                sol=u2.move; 
+                                break;  
+                              }  
+                         else{
+                                
+                               for(int i=1;i<5;i++){
+                                 mySit=(u.s).toCharArray();
+                                      Roll_left(mySit,i);  
+                                       if(!visited_left.contains(String.valueOf(mySit))){
+                                                if(visited_right.containsValue(String.valueOf(mySit))){
+                                                        sol1=visited_left.get(String.valueOf(mySit));
+                                                        break;                 }
+                                                 else{       
+                                                 
+                                       q_left.offer(new Situation(String.valueOf(mySit),u1.move+String.valueOf(i)));
+                                       visited_left.add(String.valueOf(mySit));
+                                       }  }
+                                    }
+                                 for(int i=1;i<5;i++){
+                                 mySit=(u.s).toCharArray();
+                                      Roll_right(mySit,i);                 
+                                      if(!visited_right.contains(String.valueOf(mySit))){
+                                                if(visited_left.containsValue(String.valueOf(mySit))){
+                                                        sol2=visited_left.get(String.valueOf(mySit));
+                                                        break;                 }
+                                                 else{       
+                                                 
+                                       q_right.offer(new Situation(String.valueOf(mySit),u1.move+String.valueOf(i)));
+                                       visited_right.add(String.valueOf(mySit));
+                                       }  }
+                                    }
+                               }
+                        }           
+              System.ou.println("partial sol="+sol1+sol2+"sol="+sol);
+           }
+      }                   

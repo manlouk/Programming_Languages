@@ -1,0 +1,3 @@
+isMember([],[]).
+%isMember(X,[X|_]).
+%isMember(X,[_|Ys]):-isMember(X,Ys).

@@ -1,0 +1,9 @@
+decreasing_sublist(List,Len,DecrSub) :-
+sublist(List,DecrSub),
+sort(DecrSub,DecrSubSorted),
+reverse(DecrSubSorted,DecrSub),
+length(DecrSub,Len).
+
+
+
+

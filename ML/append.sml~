@@ -1,0 +1,2 @@
+fun append(nil,l)=l
+| append(r,l)=r::append(nil,l);

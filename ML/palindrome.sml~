@@ -1,0 +1,10 @@
+open TextIO;
+fun readList(stdIn)=
+    if endOfStream(stdIn) then nil
+    else inputN(stdIn,1)::readList(stdIn);
+
+
+fun palindrome ( l: int list ):bool =
+      l=readList(stdIn);
+      l=rev(l);
+

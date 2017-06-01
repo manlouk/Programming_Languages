@@ -1,0 +1,9 @@
+local
+  $(SML_LIB)/basis/basis.mlb (* import the Basis Library *)
+  $(SML_LIB)/smlnj-lib/Util/smlnj-lib.mlb  (* import the SML/NJ
+Utility Library *)
+in
+  bibfs.sml
+  (* SML file making use of the Basis Library and the SML/NJ
+Utility Library *)
+end

@@ -1,0 +1,3 @@
+open List 
+fun andList(L)=
+        List.foldr ( op andalso ) true L

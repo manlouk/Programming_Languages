@@ -1,0 +1,61 @@
+fun digits(x:int):int list=
+  let
+    fun digitIn(x:int,acc:int list):int list=
+      (case x of
+            0 =>acc
+          | x =>digitIn(x div 10,(x mod 10)::acc))
+  in
+    digitIn(x,nil)
+end
+fun simpleMap(F,nil)=nil
+  | simpleMap(F,x::xs)=F(x)::simpleMap(F,xs)
+fun sum_digits(nil)=0
+  | sum_digits(x::xs)=x+sum_digits(xs)
+fun comp(F,G,x)=F(G(x));
+fun f(x)=sum_digits(simpleMap(fn x=>x*x,digits(x)));
+fun isHappy(x:int)=
+  let
+    fun isHappy1(1,_)=true
+      | isHappy1(_,1)=true
+      | isHappy1(x,y)=if x=y then false else
+       isHappy1(f(x),comp(f,f,y))
+  in
+    isHappy1(x,comp(f,f,x))
+  end
+
+fun re(a:int,b:int):int=
+let
+  fun rep1(a,b,happies)=if a=b+1 then happies else
+    if isHappy(f(a))=true then rep1(a+1,b,happies+1) else rep1(a+1,b,happies)
+in
+  rep1(a,b,0)
+end
+
+
+
+
+
+fun printList(nil)=()
+  | printList(x::xs)=
+  ( print(Int.toString(x));
+    print("\n");
+    printList(xs)
+    );
+fun main()=
+    let
+        val t= (CommandLine.arguments())
+        val a=hd(t)
+        val b=hd(tl(t))
+
+        val sol=re(Option.valOf (Int.fromString a), Option.valOf (Int.fromString
+        b))
+    (*  val d=digits(Option.valOf (Int.fromString a))
+      val result=sum_digits(simpleMap(fn x=>x*x,d))
+      val h=isHappy(result)
+      *)
+    in
+      print(Int.toString(sol)^"\n")
+   end
+val _ = main()
+
+

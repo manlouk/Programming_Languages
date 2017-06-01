@@ -1,0 +1,1 @@
+fun map f xs = foldr (fn (f,x,z) => (f x) :: z) [] xs

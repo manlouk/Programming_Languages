@@ -1,0 +1,9 @@
+fun dropN(L,k)=
+        let fun dropN'([],0,Y)=Y
+                | dropN'(x::xs,0,Y)=dropN'(xs,0,x::Y)
+                | dropN'(x::xs,1,Y)=dropN'(xs,0,Y)     
+                | dropN'(x::xs,k,Y)=dropN'(xs,k-1,x::Y)
+        in
+              rev dropN'(L,k,[])
+         end
+                      

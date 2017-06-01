@@ -1,0 +1,181 @@
+import java.util.*;
+import java.io.*;
+public class roll {
+   public static class Situation{
+          private  String s;
+          private  String move;
+        public Situation(String s,String move){
+                this.s= new String(s);
+                this.move=new String(move);
+                }
+       }
+  public static void Roll_right(char[] str,int i){
+        char tmp1,tmp2,tmp3;
+        if(i==1){
+                tmp1=str[0];
+                tmp2=str[3];
+                str[0]=str[2];
+                str[3]=tmp1;
+                tmp3=str[5];
+                str[5]=tmp2;
+                str[2]=tmp3;
+              }
+          else if (i==2){
+                tmp1=str[1];
+                tmp2=str[4];
+                tmp3=str[6];
+                str[1]=str[3];
+                str[4]=tmp1;
+                str[6]=tmp2;
+                str[3]=tmp3;
+                }
+           else if(i==3){
+                tmp1=str[5];
+                tmp2=str[8];
+                tmp3=str[10];
+                str[5]=str[7];
+                str[8]=tmp1;
+                str[10]=tmp2;
+                str[7]=tmp3; 
+              }
+           else{
+                tmp1=str[6];
+                tmp2=str[9];
+                tmp3=str[11];
+                str[6]=str[8];
+                str[9]=tmp1;
+                str[11]=tmp2;
+                str[8]=tmp3; 
+              }
+          }                  
+     public static void Roll_left(char[] str,int i){ 
+                 char tmp1,tmp2,tmp3;
+        if(i==1){
+                tmp1=str[2];
+                str[2]=str[0];
+                str[0]=str[3];
+                str[3]=str[5];
+                str[5]=tmp1;
+              }
+          else if (i==2){
+                tmp1=str[3];
+                str[3]=str[1];
+                str[1]=str[4];
+                str[4]=str[6];
+                str[6]=tmp1;
+                }
+           else if(i==3){
+                tmp1=str[8];
+                str[8]=str[10];
+                str[10]=str[7];
+                str[7]=str[5];
+                str[5]=tmp1; 
+              }
+           else{
+                tmp1=str[9];
+                str[9]=str[11];
+                str[11]=str[8];
+                str[8]=str[6];
+                str[6]=tmp1; 
+              }
+            }         
+  private static HashSet <String> leftSearch = new HashSet <String>();
+   private static HashSet <String> rightSearch = new HashSet <String>();
+    private static HashSet <Situation> commonSearch = new HashSet <Situation>();
+  private static char[] mySit=new char[13];
+  private static Queue<Situation> q = new LinkedList<Situation>();
+  private static Queue<Situation> p = new LinkedList<Situation>();
+   private static Situation bfs_right(Situation start_node,String leaf ){
+               q.offer(start_node);
+                rightSearch.add(start_node.s);
+                Situation sol1=new Situation("","");
+                while(!q.isEmpty()){
+                         Situation u = q.poll();
+                          
+                         if((u.s).equals(leaf)){
+                              sol1=new Situation(u.s,u.move) ;
+                              q.clear();
+                             //return sol1;
+                             
+                           }   
+                          else{
+                                
+                               for(int i=1;i<5;i++){
+                                 mySit=(u.s).toCharArray();
+                                      Roll_right(mySit,i);  
+                                      //System.out.println(u.move);
+                                        Situation u_n=new Situation(String.valueOf(mySit),u.move+String.valueOf(i)); 
+                                      // System.out.println(u_n.s+" "+u_n.move);
+                                   if(!rightSearch.contains(u_n.s)){            
+                                        q.offer(u_n);
+                                        rightSearch.add(u_n.s);
+                                       if(leftSearch.contains(u_n.s)){//commonSearch.add(u_n);
+                                           sol1=new Situation(u_n.s,u_n.move);
+                                         q.clear();
+                                      }   
+                                    //     break;
+                                  } 
+                  }
+                 //return sol;
+         }
+   }      //if(!sol1.equals("")) q.clear();     //    return sol1;             
+  return sol1;
+ }
+
+ private static Situation bfs_left(Situation start_node,String leaf){
+                  p.offer(start_node);
+                leftSearch.add(start_node.s);
+                Situation sol2=new Situation("","");
+                while(!p.isEmpty()){
+                         Situation u = p.poll();
+                          
+                         if((u.s).equals(leaf)){
+                             sol2=new Situation(u.s,u.move) ;
+                              //return sol2;
+                              p.clear();
+                           }   
+                          else{
+                                
+                               for(int i=1;i<5;i++){
+                                 mySit=(u.s).toCharArray();
+                                      Roll_left(mySit,i);  
+                                      //System.out.println(u.move);
+                                        Situation u_n=new Situation(String.valueOf(mySit),u.move+String.valueOf(i)); 
+                                      // System.out.println(u_n.s+" "+u_n.move);
+                                    if(!leftSearch.contains(u_n.s)){            
+                                       p.offer(u_n);
+                                       leftSearch.add(u_n.s);
+                                        if(rightSearch.contains(u_n.s)){
+                                            sol2=new Situation(u_n.s,u_n.move);
+                                            //sol2=new String(u_n.move);
+                              //             return sol;
+                                            p.clear();
+                                            break;
+                                                } 
+                  }
+                 
+         }
+         }
+      }   //return sol2;
+        // break;                      
+  return sol2;
+ }
+    public static void main(String[] args) throws Exception {
+    long startTime = System.currentTimeMillis();
+               File file = new File(args[0]);
+           Scanner in=new Scanner(file);
+           String solution=new String();
+           //Scanner in = new Scanner(System.in);
+           solution = new String(in.nextLine());             
+                // AdjList.clear();
+           String solved=new String("bgbGgGGrGyry");    
+                Situation st = new Situation(solution,new String());
+                Situation end = new Situation(solved,new String());
+                //System.out.println(st.move);
+           //     map.put(st.s,true);
+              String  sol_=new String(bfs_left(end,solution).move);
+                 
+                  
+    System.out.println(sol_);
+ }
+}                                  

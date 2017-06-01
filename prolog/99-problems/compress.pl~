@@ -1,0 +1,4 @@
+compress(Xs,Ys):-comp(Xs,Ys,[]).
+comp([X|Xs],Ys,[X|R]):-comp(Xs,Ys,[X|R]).
+comp([X|Xs],Ys,R):-comp(Xs,Ys,[X|R]).
+comp([],R,R):-reverse(R,Z).

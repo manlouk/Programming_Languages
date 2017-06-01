@@ -1,0 +1,23 @@
+datatype for = to of int * int
+             | downto of int * int
+
+infix to downto
+
+fun main()=
+
+  let val for =
+    fn lo to up =>
+       (fn f => let fun loop lo = if lo > up then ()
+                                  else (f lo; loop (lo+1))
+                in loop lo end)
+     | up downto lo =>
+       (fn f => let fun loop up = if up < lo then ()
+                                  else (f up; loop (up-1))
+                in loop up end)
+in
+ for ( 0 to 9 )
+    (fn i =>
+        for(0 to 9)
+        (fn j => print ( Int.toString(i)^Int.toString(j))))
+ end
+val _= main()

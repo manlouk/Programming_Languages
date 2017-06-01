@@ -1,0 +1,10 @@
+fun reverse(l:'a list):'a list =
+     let 
+        fun rev(l:'a list,acc:'a list):'a list =
+                (case l of 
+                          nil => acc
+                        | x::xs => rev(xs,acc::x))
+         in 
+                rev(l,nil)
+                               
+end        

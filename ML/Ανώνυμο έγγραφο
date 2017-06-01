@@ -1,0 +1,5 @@
+datatype  'data tree = Empty | ( 'data tree ) * 'data * ( 'data tree )
+
+  fun append_all((Empty,data,Empty))=data
+       | append_all((L,data,R)) = data@append_all((L1,L,R1))@append_all(L2,R,R2)
+        
